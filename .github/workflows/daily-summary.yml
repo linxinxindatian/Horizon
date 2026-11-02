@@ -55,29 +55,3 @@ jobs:
           commit_message: "📝 Daily Summary: ${{ env.DATE }}"
           publish_branch: gh-pages
           enable_jekyll: true
-
-      - name: Restore encrypted WeChat session
-        uses: actions/cache/restore@v4
-        with:
-          path: ${{ runner.temp }}/wechat-session.enc
-          key: wechat-session-v1-${{ github.run_id }}-${{ github.run_attempt }}
-          restore-keys: wechat-session-v1-
-
-      - name: Send Chinese briefing to personal WeChat
-        id: wechat
-        env:
-          HORIZON_WECHAT_SESSION: ${{ secrets.HORIZON_WECHAT_SESSION }}
-        run: |
-          if [[ -z "$HORIZON_WECHAT_SESSION" ]]; then
-            echo "WeChat pairing is pending."
-            exit 0
-          fi
-          echo "paired=true" >> "$GITHUB_OUTPUT"
-          uv run python scripts/wechat_daily.py "docs/_posts/${DATE}-summary-zh.md"
-
-      - name: Save encrypted WeChat session
-        if: ${{ !cancelled() && steps.wechat.outputs.paired == 'true' }}
-        uses: actions/cache/save@v4
-        with:
-          path: ${{ runner.temp }}/wechat-session.enc
-          key: wechat-session-v1-${{ github.run_id }}-${{ github.run_attempt }}

@@ -1,0 +1,74 @@
+name: WeChat Daily Briefing
+
+on:
+  schedule:
+    # 02:30 UTC is 10:30 in Asia/Shanghai.
+    - cron: '30 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: horizon-wechat-delivery
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Check out published briefings
+        uses: actions/checkout@v6
+        with:
+          ref: gh-pages
+          path: published
+          fetch-depth: 0
+          sparse-checkout: _posts
+
+      - name: Locate the Chinese briefing published today
+        env:
+          TZ: Asia/Shanghai
+        run: |
+          commit=$(git -C published log -1 --since="$(date +%F) 00:00:00 +0800" --format=%H -- '_posts/*-summary-zh.md')
+          if [[ -z "$commit" ]]; then
+            echo "::error::No Chinese briefing has been published today."
+            exit 1
+          fi
+          post=$(git -C published diff-tree --root -m --no-commit-id --name-only --diff-filter=AM -r "$commit" -- '_posts/*-summary-zh.md' | tail -1)
+          test -n "$post" && test -s "published/$post"
+          echo "REPORT_PATH=published/$post" >> "$GITHUB_ENV"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.11.26"
+
+      - run: uv sync --frozen
+
+      - name: Restore encrypted WeChat session
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ runner.temp }}/wechat-session.enc
+          key: wechat-session-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: wechat-session-v1-
+
+      - name: Send Chinese briefing to personal WeChat
+        id: wechat
+        env:
+          HORIZON_WECHAT_SESSION: ${{ secrets.HORIZON_WECHAT_SESSION }}
+        run: |
+          : "${HORIZON_WECHAT_SESSION:?Set the paired session in repository secrets}"
+          echo "paired=true" >> "$GITHUB_OUTPUT"
+          uv run python scripts/wechat_daily.py "$REPORT_PATH"
+
+      - name: Save encrypted WeChat session
+        if: ${{ !cancelled() && steps.wechat.outputs.paired == 'true' }}
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ runner.temp }}/wechat-session.enc
+          key: wechat-session-v1-${{ github.run_id }}-${{ github.run_attempt }}
