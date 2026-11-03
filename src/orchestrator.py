@@ -1,6 +1,7 @@
 """Main orchestrator coordinating the entire workflow."""
 
 import asyncio
+import os
 from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
@@ -248,6 +249,10 @@ class HorizonOrchestrator:
             f"[bold cyan]{self.icons['start']} Horizon - Starting aggregation...[/bold cyan]\n"
         )
 
+        # Use the configured process timezone for the issue date, defaulting to UTC.
+        report_timezone = None if os.environ.get("TZ") else timezone.utc
+        today = datetime.now(report_timezone).date().isoformat()
+
         # Check email subscriptions if configured
         if (
             self.email_manager
@@ -313,7 +318,6 @@ class HorizonOrchestrator:
             await self.enrich_items(important_items)
 
             # 7. Generate and save daily summaries for each configured language
-            today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
             for lang in self.config.ai.languages:
                 summarizer = DailySummarizer(
                     profile_names=self.profiles.names,
@@ -417,12 +421,12 @@ class HorizonOrchestrator:
             # Send webhook failure notification if configured
             if self.webhook_notifier:
                 await self.webhook_notifier.send_failure(
-                    date=datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+                    date=today,
                     error_message=str(e),
                 )
             if self.wechat_notifier:
                 await self.wechat_notifier.send_failure(
-                    date=datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+                    date=today,
                     error_message=str(e),
                 )
 
