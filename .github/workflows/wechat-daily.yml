@@ -5,6 +5,9 @@ on:
     # The second trigger covers a missed first trigger or a late edition.
     - cron: '30,47 10 * * *'
       timezone: Asia/Shanghai
+    # Temporary November 3 acceptance window; the edition is already delivered.
+    - cron: '16,23 11 3 11 *'
+      timezone: Asia/Shanghai
   workflow_dispatch:
 
 permissions:
