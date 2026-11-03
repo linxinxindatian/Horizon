@@ -1,0 +1,16 @@
+.github/workflows/daily-summary.yml
+  h_879baf8de74c25 8-10
+.github/workflows/wechat-daily.yml
+  h_879baf8de74c25 8-10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "716f33d78458d2a541e9e6603608c239a5d73365",
+  "prompts": {},
+  "humans": {
+    "h_879baf8de74c25": {
+      "author": "linruibiao <linruibiao@codemao.cn>"
+    }
+  }
+}
