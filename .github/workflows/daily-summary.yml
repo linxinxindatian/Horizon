@@ -2,8 +2,8 @@ name: Daily Horizon Summary
 
 on:
   schedule:
-    # 23:00 UTC is 07:00 the following day in Asia/Shanghai.
-    - cron: '0 23 * * *'
+    - cron: '0 7 * * *'
+      timezone: Asia/Shanghai
   workflow_dispatch:      # Allow manual trigger
 
 concurrency:
@@ -13,6 +13,8 @@ concurrency:
 jobs:
   daily-summary:
     runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Shanghai
     permissions:
       contents: write  # Needed to commit changes
 
