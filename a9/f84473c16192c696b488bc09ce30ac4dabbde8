@@ -1,0 +1,25 @@
+.github/workflows/daily-summary.yml
+  s_ec23383bc4c677::t_9df35a2cff4d8a 78-80
+  s_ec23383bc4c677::t_22c9dee98ea88d 5-6,15-38,40-41
+scripts/reserve_wechat_delivery.sh
+  s_ec23383bc4c677::t_22c9dee98ea88d 1-16
+.github/workflows/wechat-daily.yml
+  s_ec23383bc4c677::t_9df35a2cff4d8a 58-59,66,72-77,80
+  s_ec23383bc4c677::t_22c9dee98ea88d 5-6,11,34-36,39,64-65,67-71
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a9f84473c16192c696b488bc09ce30ac4dabbde8",
+  "prompts": {},
+  "sessions": {
+    "s_ec23383bc4c677": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19f60-68ca-7011-8056-6d8a9d7f0dc7",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "linruibiao <linruibiao@codemao.cn>"
+    }
+  }
+}
