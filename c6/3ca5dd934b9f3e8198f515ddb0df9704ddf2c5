@@ -1,0 +1,19 @@
+src/orchestrator.py
+  s_4457c0540d0623::t_afdaee9e28bce3 4,252-255,424,429
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c63ca5dd934b9f3e8198f515ddb0df9704ddf2c5",
+  "prompts": {},
+  "sessions": {
+    "s_4457c0540d0623": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19b2f-4fd8-7001-a3d4-887202bf39c6",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "linruibiao <linruibiao@codemao.cn>"
+    }
+  }
+}
