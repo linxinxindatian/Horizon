@@ -1,0 +1,21 @@
+.github/workflows/daily-summary.yml
+  s_4457c0540d0623::t_9876cb9eb4d885 5-6,16-17
+.github/workflows/wechat-daily.yml
+  s_4457c0540d0623::t_3deb9d86f05e7f 5-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "90efa3b177c84d533f081f01573dd8dc6a7c1dcf",
+  "prompts": {},
+  "sessions": {
+    "s_4457c0540d0623": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19b2f-4fd8-7001-a3d4-887202bf39c6",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "linruibiao <linruibiao@codemao.cn>"
+    }
+  }
+}
