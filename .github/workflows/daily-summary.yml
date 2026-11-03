@@ -2,7 +2,8 @@ name: Daily Horizon Summary
 
 on:
   schedule:
-    - cron: '0 7 * * *'
+    # Retry once if the first trigger was missed or did not publish.
+    - cron: '0,17 7 * * *'
       timezone: Asia/Shanghai
   workflow_dispatch:      # Allow manual trigger
 
@@ -11,7 +12,33 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  check-edition:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      generate: ${{ steps.edition.outputs.generate }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: gh-pages
+          sparse-checkout: _posts
+
+      - name: Check for today's published Chinese edition
+        id: edition
+        env:
+          TZ: Asia/Shanghai
+          EVENT: ${{ github.event_name }}
+        run: |
+          if [[ "$EVENT" == schedule && -s "_posts/$(date +%F)-summary-zh.md" ]]; then
+            echo "generate=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "generate=true" >> "$GITHUB_OUTPUT"
+          fi
+
   daily-summary:
+    needs: check-edition
+    if: needs.check-edition.outputs.generate == 'true'
     runs-on: ubuntu-latest
     env:
       TZ: Asia/Shanghai
@@ -47,6 +74,9 @@ jobs:
 
       - name: Set current date as environment variable
         run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
+      - name: Verify the Chinese edition before publishing
+        run: test -s "docs/_posts/${DATE}-summary-zh.md"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
