@@ -87,3 +87,23 @@ jobs:
           commit_message: "📝 Daily Summary: ${{ env.DATE }}"
           publish_branch: gh-pages
           enable_jekyll: true
+
+  recover-late-delivery:
+    needs: [check-edition, daily-summary]
+    if: >-
+      always() && !cancelled() && needs.check-edition.result == 'success' &&
+      (needs.daily-summary.result == 'success' || needs.daily-summary.result == 'skipped')
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Trigger WeChat if the morning delivery time has passed
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TZ: Asia/Shanghai
+        run: |
+          if [[ "$(date +%H%M)" < "1030" ]]; then
+            echo "The 10:30 WeChat schedule will handle this edition."
+            exit 0
+          fi
+          gh workflow run wechat-daily.yml --repo "$GITHUB_REPOSITORY" --ref "${{ github.event.repository.default_branch }}"
