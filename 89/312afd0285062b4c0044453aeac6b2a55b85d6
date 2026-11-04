@@ -1,0 +1,19 @@
+.github/workflows/daily-summary.yml
+  s_ec23383bc4c677::t_c3a4fc8bdec7a4 90-109
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "89312afd0285062b4c0044453aeac6b2a55b85d6",
+  "prompts": {},
+  "sessions": {
+    "s_ec23383bc4c677": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19f60-68ca-7011-8056-6d8a9d7f0dc7",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "linruibiao <linruibiao@codemao.cn>"
+    }
+  }
+}
