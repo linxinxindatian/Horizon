@@ -1,0 +1,14 @@
+.github/workflows/daily-summary.yml
+  h_879baf8de74c25 4-5,28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "463fa56983ae6cd04658c14a68da748437e69f41",
+  "prompts": {},
+  "humans": {
+    "h_879baf8de74c25": {
+      "author": "linruibiao <linruibiao@codemao.cn>"
+    }
+  }
+}
